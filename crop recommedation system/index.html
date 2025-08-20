@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Crop Recommendation System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0fff0;
+      padding: 30px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      width: 200px;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e6ffe6;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🌾 Crop Recommendation System</h2>
+  <form id="cropForm">
+    <input type="number" id="N" placeholder="Nitrogen (N)" required><br>
+    <input type="number" id="P" placeholder="Phosphorus (P)" required><br>
+    <input type="number" id="K" placeholder="Potassium (K)" required><br>
+    <input type="number" id="temp" placeholder="Temperature (°C)" required><br>
+    <input type="number" id="humidity" placeholder="Humidity (%)" required><br>
+    <input type="number" id="ph" placeholder="pH" step="0.1" required><br>
+    <input type="number" id="rainfall" placeholder="Rainfall (mm)" required><br>
+    <button type="submit">Get Recommendation</button>
+  </form>
+
+  <div class="result" id="result" style="display:none;"></div>
+
+  <script>
+    const crops = [
+      {
+        name: "Rice",
+        condition: d => d.N >= 80 && d.P >= 40 && d.K >= 40 && d.temp >= 20 && d.temp <= 30 && d.ph >= 6 && d.humidity >= 70,
+        place: "West Bengal, India",
+        price: "₹20 - ₹30/kg"
+      },
+      {
+        name: "Wheat",
+        condition: d => d.N >= 50 && d.P >= 20 && d.temp >= 15 && d.temp <= 25 && d.ph >= 5.5 && d.humidity >= 60,
+        place: "Punjab, India",
+        price: "₹22 - ₹28/kg"
+      },
+      {
+        name: "Maize",
+        condition: d => d.N >= 60 && d.P >= 30 && d.temp >= 20 && d.temp <= 35 && d.ph >= 6 && d.rainfall >= 150,
+        place: "Karnataka, India",
+        price: "₹18 - ₹25/kg"
+      },
+      {
+        name: "Barley",
+        condition: d => d.ph < 5.5 && d.humidity < 60,
+        place: "Rajasthan, India",
+        price: "₹16 - ₹20/kg"
+      },
+      {
+        name: "Millet",
+        condition: d => true,  // default crop
+        place: "Maharashtra, India",
+        price: "₹15 - ₹18/kg"
+      }
+    ];
+
+    document.getElementById("cropForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const data = {
+        N: parseFloat(document.getElementById("N").value),
+        P: parseFloat(document.getElementById("P").value),
+        K: parseFloat(document.getElementById("K").value),
+        temp: parseFloat(document.getElementById("temp").value),
+        humidity: parseFloat(document.getElementById("humidity").value),
+        ph: parseFloat(document.getElementById("ph").value),
+        rainfall: parseFloat(document.getElementById("rainfall").value),
+      };
+
+      const crop = crops.find(c => c.condition(data));
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `
+        <h3>✅ Recommended Crop: ${crop.name}</h3>
+        <p>📍 Place: <strong>${crop.place}</strong></p>
+        <p>💰 Price: <strong>${crop.price}</strong></p>
+      `;
+      resultDiv.style.display = "block";
+    });
+  </script>
+</body>
+</html>
